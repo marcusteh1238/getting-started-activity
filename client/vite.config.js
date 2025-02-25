@@ -12,6 +12,7 @@ export default defineConfig({
         ws: true,
       },
     },
+    allowedHosts: true,
     hmr: {
       clientPort: 443,
     },
