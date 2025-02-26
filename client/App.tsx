@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { DiscordSDK, type CommandResponse } from "@discord/embedded-app-sdk";
+import { DiscordSDK, type CommandResponse, Responses, EventPayloadData } from "@discord/embedded-app-sdk";
 import { type APIGuild } from 'discord-api-types/v10';
 import rocketLogo from '/rocket.png';
+import VoiceChannelUsers from './VoiceChannelUsers';
 
 type Auth = CommandResponse<'authenticate'>;
-
 const discordSdk = new DiscordSDK(import.meta.env.VITE_DISCORD_CLIENT_ID);
+
 
 function App() {
   const [auth, setAuth] = useState<Auth | null>(null);
@@ -23,7 +24,7 @@ function App() {
         response_type: "code",
         state: "",
         prompt: "none",
-        scope: ["identify", "guilds", "applications.commands"],
+        scope: ["identify", "guilds", "applications.commands", "guilds.members.read", "rpc.voice.read"],
       });
 
       // Retrieve an access_token
@@ -46,6 +47,19 @@ function App() {
       setAuth(authResponse);
       fetchChannelName();
       fetchGuildAvatar(authResponse);
+      
+      discordSdk.subscribe('SPEAKING_START', (event: EventPayloadData<"SPEAKING_START">) => {
+        console.log('Speaking start:', event);
+      }, {
+        channel_id: discordSdk.channelId,
+        lobby_id: discordSdk.instanceId,
+      });
+      discordSdk.subscribe('SPEAKING_STOP', (event: EventPayloadData<"SPEAKING_STOP">) => {
+        console.log('Speaking stop:', event);
+      }, {
+        channel_id: discordSdk.channelId,
+        lobby_id: discordSdk.instanceId,
+      });
     }
 
     setupDiscordSdk().catch(console.error);
@@ -93,6 +107,7 @@ function App() {
           alt="Guild Icon"
         />
       )}
+      {auth && <VoiceChannelUsers discordSdk={discordSdk} auth={auth} />}
     </div>
   );
 }
