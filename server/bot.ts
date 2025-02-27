@@ -20,6 +20,12 @@ client.on('messageCreate', async message => {
   await addMessagesToChannel(message.channelId, message);
 });
 
+client.on('messageCreate', async message => {
+  if (message.content === ('peepee')) {
+    message.channel.send('poopoo');
+  }
+});
+
 client.login(process.env.DISCORD_BOT_TOKEN);
 
 export default client;
