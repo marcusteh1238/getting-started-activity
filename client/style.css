@@ -86,3 +86,27 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.live-chat-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.live-chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.live-chat-message {
+  padding: 5px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}

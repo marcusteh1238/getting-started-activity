@@ -3,10 +3,10 @@ import { DiscordSDK, type CommandResponse, Responses, EventPayloadData } from "@
 import { type APIGuild } from 'discord-api-types/v10';
 import rocketLogo from '/rocket.png';
 import VoiceChannelUsers from './VoiceChannelUsers';
+import LiveChat from './LiveChat';
 
 type Auth = CommandResponse<'authenticate'>;
 const discordSdk = new DiscordSDK(import.meta.env.VITE_DISCORD_CLIENT_ID);
-
 
 function App() {
   const [auth, setAuth] = useState<Auth | null>(null);
@@ -108,6 +108,7 @@ function App() {
         />
       )}
       {auth && <VoiceChannelUsers discordSdk={discordSdk} auth={auth} />}
+      {auth && <LiveChat discordSdk={discordSdk} auth={auth} />}
     </div>
   );
 }

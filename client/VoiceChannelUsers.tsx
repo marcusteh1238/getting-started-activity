@@ -81,7 +81,7 @@ function VoiceChannelUsers({ discordSdk, auth }: VoiceChannelUsersProps) {
 
   return (
     <div className="voice-users-container">
-      <h3>Users in Voice Channel</h3>
+      <h3>Users in Activity</h3>
       <div className="voice-users-list">
         {users.length > 0 ? (
           users.map(user => (
