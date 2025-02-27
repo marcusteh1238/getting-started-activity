@@ -34,18 +34,18 @@ app.post("/api/token", async (req, res) => {
 });
 
 app.get("/api/messages", async (req, res) => {
-  if (!req.query.channelId) {
+  const channelId = req.query.channelId as string;
+  if (!channelId) {
     res.status(400).send({ error: "Channel ID is required" });
     return;
   }
-  let messages = await getMessagesFromChannel(req.query.channelId as string);
+  let messages = await getMessagesFromChannel(channelId);
   if (messages.length === 0) {
     // fetch existing messages from discord if they do not exist in our storage
-    const channel = await client.channels.fetch(req.query.channelId as string, {
+    const channel = await client.channels.fetch(channelId, {
       force: true,
       cache: true,
     });
-    
     if (!channel) {
       res.status(404).send({ error: "Channel not found" });
       return;
@@ -54,10 +54,11 @@ app.get("/api/messages", async (req, res) => {
       res.status(400).send({ error: "Channel is not a voice channel or text channel" });
       return;
     }
-    const messages = await channel.messages.fetch();
+    const messages = await channel.messages.fetch({
+      limit: 100,
+    });
     const msgArr = Array.from(messages.values());
-    console.log(msgArr);
-    await addMessagesToChannel(req.query.channelId as string, msgArr);
+    await addMessagesToChannel(channelId, msgArr.reverse());
   }
   res.status(200).send(messages);
 });
