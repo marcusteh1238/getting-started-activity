@@ -3,6 +3,6 @@ export type DiscordMsgDetails = {
   username: string;
   content: string;
   timestamp: string;
-}
+};
 
 export type DiscordMsgStorage = Record<string, DiscordMsgDetails[]>;

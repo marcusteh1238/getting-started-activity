@@ -4,7 +4,8 @@
   "description": "",
   "main": "server.ts",
   "scripts": {
-    "dev": "tsx watch --env-file=../.env server.ts"
+    "dev": "tsx watch --env-file=../.env server.ts",
+    "lint": "eslint . --fix --ext .ts,.tsx"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +23,12 @@
     "yarn": "4.6.0"
   },
   "devDependencies": {
-    "@types/express": "^5.0.0"
+    "@types/express": "^5.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.25.0",
+    "@typescript-eslint/parser": "^8.25.0",
+    "eslint": "^9.21.0",
+    "eslint-config-prettier": "^10.0.2",
+    "eslint-plugin-prettier": "^5.2.3",
+    "prettier": "^3.5.2"
   }
 }

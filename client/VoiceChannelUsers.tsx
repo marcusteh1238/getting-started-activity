@@ -1,6 +1,6 @@
 // VoiceChannelUsers.tsx
 import React, { useEffect, useState } from 'react';
-import { DiscordSDK, EventPayloadData } from "@discord/embedded-app-sdk";
+import { DiscordSDK, EventPayloadData } from '@discord/embedded-app-sdk';
 import './VoiceChannelUsers.css';
 
 interface User {
@@ -25,54 +25,55 @@ function VoiceChannelUsers({ discordSdk, auth }: VoiceChannelUsersProps) {
     async function fetchVoiceChannelUsers() {
       try {
         // Get guild members
-        const response = await discordSdk.commands.getInstanceConnectedParticipants();
-        
+        const response =
+          await discordSdk.commands.getInstanceConnectedParticipants();
+
         const members = await response.participants;
-        
+
         // Map to user objects
-        const usersData = members.map(member => ({
+        const usersData = members.map((member) => ({
           id: member.id,
           username: member.nickname || member.username,
-          avatar: member.avatar ? 
-            `https://cdn.discordapp.com/avatars/${member.id}/${member.avatar}.webp?size=64` : 
-            `https://cdn.discordapp.com/embed/avatars/${parseInt(member.discriminator || '0') % 5}.png`,
-          isSpeaking: false
+          avatar: member.avatar
+            ? `https://cdn.discordapp.com/avatars/${member.id}/${member.avatar}.webp?size=64`
+            : `https://cdn.discordapp.com/embed/avatars/${parseInt(member.discriminator || '0') % 5}.png`,
+          isSpeaking: false,
         }));
-        
+
         setUsers(usersData);
       } catch (error) {
-        console.error("Error fetching voice channel users:", error);
+        console.error('Error fetching voice channel users:', error);
       }
     }
 
     fetchVoiceChannelUsers();
 
     // Set up speaking event handlers
-    discordSdk.subscribe('SPEAKING_START', 
-      (event: EventPayloadData<"SPEAKING_START">) => {
-        setUsers(prevUsers => 
-          prevUsers.map(user => 
-            user.id === event.user_id ? 
-              { ...user, isSpeaking: true } : 
-              user
+    discordSdk.subscribe(
+      'SPEAKING_START',
+      (event: EventPayloadData<'SPEAKING_START'>) => {
+        setUsers((prevUsers) =>
+          prevUsers.map((user) =>
+            user.id === event.user_id ? { ...user, isSpeaking: true } : user
           )
         );
-      }, {
+      },
+      {
         channel_id: discordSdk.channelId,
         lobby_id: discordSdk.instanceId,
       }
     );
-    
-    discordSdk.subscribe('SPEAKING_STOP', 
-      (event: EventPayloadData<"SPEAKING_STOP">) => {
-        setUsers(prevUsers => 
-          prevUsers.map(user => 
-            user.id === event.user_id ? 
-              { ...user, isSpeaking: false } : 
-              user
+
+    discordSdk.subscribe(
+      'SPEAKING_STOP',
+      (event: EventPayloadData<'SPEAKING_STOP'>) => {
+        setUsers((prevUsers) =>
+          prevUsers.map((user) =>
+            user.id === event.user_id ? { ...user, isSpeaking: false } : user
           )
         );
-      }, {
+      },
+      {
         channel_id: discordSdk.channelId,
         lobby_id: discordSdk.instanceId,
       }
@@ -84,13 +85,15 @@ function VoiceChannelUsers({ discordSdk, auth }: VoiceChannelUsersProps) {
       <h3>Users in Activity</h3>
       <div className="voice-users-list">
         {users.length > 0 ? (
-          users.map(user => (
+          users.map((user) => (
             <div key={user.id} className="voice-user">
-              <div className={`avatar-container ${user.isSpeaking ? 'speaking' : ''}`}>
-                <img 
-                  src={user.avatar} 
-                  alt={`${user.username}'s avatar`} 
-                  className="user-avatar" 
+              <div
+                className={`avatar-container ${user.isSpeaking ? 'speaking' : ''}`}
+              >
+                <img
+                  src={user.avatar}
+                  alt={`${user.username}'s avatar`}
+                  className="user-avatar"
                 />
               </div>
               <span className="username">{user.username}</span>

@@ -1,7 +1,7 @@
-import { DiscordSDK, type CommandResponse } from "@discord/embedded-app-sdk";
+import { DiscordSDK, type CommandResponse } from '@discord/embedded-app-sdk';
 import { type APIGuild } from 'discord-api-types/v10';
 import rocketLogo from '/rocket.png';
-import "./style.css";
+import './style.css';
 
 const discordSdk = new DiscordSDK(import.meta.env.VITE_DISCORD_CLIENT_ID);
 
@@ -11,7 +11,7 @@ type Auth = CommandResponse<'authenticate'>;
 let auth: Auth;
 
 setupDiscordSdk().then(() => {
-  console.log("Discord SDK is authenticated");
+  console.log('Discord SDK is authenticated');
   // We can now make API calls within the scopes we requested in setupDiscordSDK()
   // Note: the access_token returned is a sensitive secret and should be treated as such
   appendVoiceChannelName();
@@ -20,29 +20,25 @@ setupDiscordSdk().then(() => {
 
 async function setupDiscordSdk() {
   await discordSdk.ready();
-  console.log("Discord SDK is ready");
+  console.log('Discord SDK is ready');
 
   // Authorize with Discord Client
   const { code } = await discordSdk.commands.authorize({
     client_id: import.meta.env.VITE_DISCORD_CLIENT_ID,
-    response_type: "code",
-    state: "",
-    prompt: "none",
-    scope: [
-      "identify",
-      "guilds",
-      "applications.commands"
-    ],
+    response_type: 'code',
+    state: '',
+    prompt: 'none',
+    scope: ['identify', 'guilds', 'applications.commands'],
   });
 
   // Retrieve an access_token from your activity's server
   // Note: We need to prefix our backend `/api/token` route with `/.proxy` to stay compliant with the CSP.
   // Read more about constructing a full URL and using external resources at
   // https://discord.com/developers/docs/activities/development-guides#construct-a-full-url
-  const response = await fetch("/.proxy/api/token", {
-    method: "POST",
+  const response = await fetch('/.proxy/api/token', {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       code,
@@ -56,7 +52,7 @@ async function setupDiscordSdk() {
   });
 
   if (auth == null) {
-    throw new Error("Authenticate command failed");
+    throw new Error('Authenticate command failed');
   }
 }
 
@@ -69,7 +65,9 @@ async function appendVoiceChannelName() {
   // the dm_channels.read scope which requires Discord approval.
   if (discordSdk.channelId != null && discordSdk.guildId != null) {
     // Over RPC collect info about the channel
-    const channel = await discordSdk.commands.getChannel({channel_id: discordSdk.channelId});
+    const channel = await discordSdk.commands.getChannel({
+      channel_id: discordSdk.channelId,
+    });
     if (channel.name != null) {
       activityChannelName = channel.name;
     }
@@ -113,7 +111,7 @@ async function appendGuildAvatar() {
 }
 
 if (document.querySelector('#app') !== null) {
-    document.querySelector('#app')!.innerHTML = `
+  document.querySelector('#app')!.innerHTML = `
       <div>
       <img src="${rocketLogo}" class="logo" alt="Discord" />
       <h1>Hello, World!</h1>

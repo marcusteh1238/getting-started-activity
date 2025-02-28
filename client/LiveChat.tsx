@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { DiscordSDK, EventPayloadData } from "@discord/embedded-app-sdk";
+import { DiscordSDK, EventPayloadData } from '@discord/embedded-app-sdk';
 
 interface LiveChatProps {
   discordSdk: DiscordSDK;
@@ -11,7 +11,7 @@ type DiscordMsgDetails = {
   username: string;
   content: string;
   timestamp: string;
-}
+};
 
 function LiveChat({ discordSdk, auth }: LiveChatProps) {
   const [messages, setMessages] = useState<DiscordMsgDetails[]>([]);
@@ -21,7 +21,9 @@ function LiveChat({ discordSdk, auth }: LiveChatProps) {
 
     const fetchMessages = async () => {
       try {
-        const response = await fetch(`/.proxy/api/messages?channelId=${discordSdk.channelId}`);
+        const response = await fetch(
+          `/.proxy/api/messages?channelId=${discordSdk.channelId}`
+        );
         if (!response.ok) {
           throw new Error('Failed to fetch messages');
         }
@@ -29,7 +31,7 @@ function LiveChat({ discordSdk, auth }: LiveChatProps) {
         console.log(data);
         setMessages(data);
       } catch (error) {
-        console.error("Error fetching messages:", error);
+        console.error('Error fetching messages:', error);
       }
     };
 
@@ -47,7 +49,7 @@ function LiveChat({ discordSdk, auth }: LiveChatProps) {
     <div className="live-chat-container">
       <h3>Live Chat</h3>
       <div className="live-chat-messages">
-        {messages.map(message => (
+        {messages.map((message) => (
           <div key={message.id} className="live-chat-message">
             <strong>{message.username}:</strong> {message.content}
           </div>
@@ -57,4 +59,4 @@ function LiveChat({ discordSdk, auth }: LiveChatProps) {
   );
 }
 
-export default LiveChat; 
+export default LiveChat;
