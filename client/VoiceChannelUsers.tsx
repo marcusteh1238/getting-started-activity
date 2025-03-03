@@ -24,60 +24,15 @@ function VoiceChannelUsers({ discordSdk, auth }: VoiceChannelUsersProps) {
     // Fetch users in the voice instance
     async function fetchVoiceChannelUsers() {
       try {
-        // Get guild members
-        const response =
-          await discordSdk.commands.getInstanceConnectedParticipants();
-
-        const members = await response.participants;
-
-        // Map to user objects
-        const usersData = members.map((member) => ({
-          id: member.id,
-          username: member.nickname || member.username,
-          avatar: member.avatar
-            ? `https://cdn.discordapp.com/avatars/${member.id}/${member.avatar}.webp?size=64`
-            : `https://cdn.discordapp.com/embed/avatars/${parseInt(member.discriminator || '0') % 5}.png`,
-          isSpeaking: false,
-        }));
-
-        setUsers(usersData);
+        // TODO: Fetch users from the voice channel
+        setUsers([]);
       } catch (error) {
         console.error('Error fetching voice channel users:', error);
       }
     }
 
     fetchVoiceChannelUsers();
-
-    // Set up speaking event handlers
-    discordSdk.subscribe(
-      'SPEAKING_START',
-      (event: EventPayloadData<'SPEAKING_START'>) => {
-        setUsers((prevUsers) =>
-          prevUsers.map((user) =>
-            user.id === event.user_id ? { ...user, isSpeaking: true } : user
-          )
-        );
-      },
-      {
-        channel_id: discordSdk.channelId,
-        lobby_id: discordSdk.instanceId,
-      }
-    );
-
-    discordSdk.subscribe(
-      'SPEAKING_STOP',
-      (event: EventPayloadData<'SPEAKING_STOP'>) => {
-        setUsers((prevUsers) =>
-          prevUsers.map((user) =>
-            user.id === event.user_id ? { ...user, isSpeaking: false } : user
-          )
-        );
-      },
-      {
-        channel_id: discordSdk.channelId,
-        lobby_id: discordSdk.instanceId,
-      }
-    );
+    // TODO: subscribe to voice channel events
   }, [discordSdk, auth]);
 
   return (

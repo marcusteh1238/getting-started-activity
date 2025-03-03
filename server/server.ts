@@ -44,28 +44,6 @@ app.get('/api/messages', async (req, res) => {
   let messages = await getMessagesFromChannel(channelId);
   if (messages.length === 0) {
     // fetch existing messages from discord if they do not exist in our storage
-    const channel = await client.channels.fetch(channelId, {
-      force: true,
-      cache: true,
-    });
-    if (!channel) {
-      res.status(404).send({ error: 'Channel not found' });
-      return;
-    }
-    if (
-      channel.type !== ChannelType.GuildVoice &&
-      channel.type !== ChannelType.GuildText
-    ) {
-      res
-        .status(400)
-        .send({ error: 'Channel is not a voice channel or text channel' });
-      return;
-    }
-    const messages = await channel.messages.fetch({
-      limit: 100,
-    });
-    const msgArr = Array.from(messages.values());
-    await addMessagesToChannel(channelId, msgArr.reverse());
   }
   res.status(200).send(messages);
 });

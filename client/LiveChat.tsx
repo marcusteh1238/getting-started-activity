@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { DiscordSDK, EventPayloadData } from '@discord/embedded-app-sdk';
+import { DiscordSDK } from '@discord/embedded-app-sdk';
 
 interface LiveChatProps {
   discordSdk: DiscordSDK;
@@ -21,15 +21,8 @@ function LiveChat({ discordSdk, auth }: LiveChatProps) {
 
     const fetchMessages = async () => {
       try {
-        const response = await fetch(
-          `/.proxy/api/messages?channelId=${discordSdk.channelId}`
-        );
-        if (!response.ok) {
-          throw new Error('Failed to fetch messages');
-        }
-        const data = await response.json();
-        console.log(data);
-        setMessages(data);
+        // TODO: Fetch messages from the channel
+        setMessages([]);
       } catch (error) {
         console.error('Error fetching messages:', error);
       }

@@ -14,15 +14,6 @@ client.once('ready', () => {
 });
 
 client.on('messageCreate', async (message) => {
-  if (!message.author.bot) {
-    console.log(
-      `[${message.channel}] ${message.author.username}: ${message.content}`
-    );
-  }
-  await addMessagesToChannel(message.channelId, message);
-});
-
-client.on('messageCreate', async (message) => {
   if (message.content === 'peepee') {
     message.channel.send('poopoo');
   }
